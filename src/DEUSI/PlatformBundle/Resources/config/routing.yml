@@ -1,13 +1,41 @@
-deusi_platform_homepage:
-    path:     /
-    defaults: { _controller: DEUSIPlatformBundle:Default:index }
-deusi_platform_new:
-    path:     /new
-    defaults: { _controller: DEUSIPlatformBundle:new:index }
-deusi_platform_new2:
-    path:       /new2
-    defaults: { _controller: DEUSIPlatformBundle:new:index2 }
-hello_the_world:
-    path:    /hello-world
-    defaults: { _controller: DEUSIPlatform:Advert:index }
+# src/DEUSI/PlatformBundle/Resources/config/routing.yml
+
+deusi_platform_home:
+    path:    /{page}/{name}
+    defaults: { _controller: DEUSIPlatformBundle:Advert:index, page: 1, name: rien }
+    requirements:
+        page: \d+
     
+deusi_platform_view:
+    path:    /advert/{id}
+    defaults:   
+        _controller:  DEUSIPlatformBundle:Advert:view                 
+    requirements:
+        id: \d+
+    
+deusi_platform_add:
+    path:    /add
+    defaults: { _controller: DEUSIPlatformBundle:Advert:add }
+
+deusi_platform_edit:
+    path:      /edit/{id}
+    defaults:
+        _controller: DEUSIPlatformBundle:Advert:edit
+    requirements:
+        id: \d+
+
+deusi_platform_delete:
+    path:      /delete/{id}
+    defaults:
+        _controller: DEUSIPlatformBundle:Advert:delete
+    requirements:
+        id: \d+
+        
+deusi_platform_view_slug:
+    path:    /{year}/{slug}.{_format}
+    defaults:
+        _controller: DEUSIPlatformBundle:Advert:viewSlug
+        format:      html
+    requirements:
+        year:   \d{4}
+        format: html|xml

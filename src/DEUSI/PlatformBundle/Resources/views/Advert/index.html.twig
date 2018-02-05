@@ -1,0 +1,43 @@
+{# src/OC/PlatformBundle/Resources/views/Advert/index.html.twig #}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bienvenue sur ma première page avec OpenClassrooms !</title>
+  </head>
+  <body>
+    <h1>Hello {{ nom }} {{ name }} !</h1>
+
+    <a href="{{ path('deusi_platform_view', { 'id': advert_id }) }}">
+        Lien vers l'annonce d'id {{ advert_id }}
+    </a>
+    <br>
+    {{ request }}
+    <br>
+    {{ tag }}
+    <br>
+    {{ accept }}
+    <br>
+    {{ encoding }}
+    <br>
+    {{ lang }}
+    <br>
+    {{ con }}
+    <br>
+    {{ host }}
+    <br>
+    {{ upgrade }}
+    <br>
+    {{ ua }}
+    <br>
+    {{ ser }}
+    <br>
+    {{ meth }}
+    <br>
+    {{ metho }}
+    <br>
+    {{ xmlHttp }}
+    <br>
+ 
+  </body>
+</html
