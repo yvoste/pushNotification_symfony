@@ -1,0 +1,13 @@
+deusi_platform_homepage:
+    path:     /
+    defaults: { _controller: DEUSIPlatformBundle:Default:index }
+deusi_platform_new:
+    path:     /new
+    defaults: { _controller: DEUSIPlatformBundle:new:index }
+deusi_platform_new2:
+    path:       /new2
+    defaults: { _controller: DEUSIPlatformBundle:new:index2 }
+hello_the_world:
+    path:    /hello-world
+    defaults: { _controller: DEUSIPlatform:Advert:index }
+    

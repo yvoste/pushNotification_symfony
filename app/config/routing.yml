@@ -1,3 +1,7 @@
+deusi_platform:
+    resource: "@DEUSIPlatformBundle/Resources/config/routing.yml"
+    prefix:   /
+
 app:
     resource: '@AppBundle/Controller/'
     type: annotation

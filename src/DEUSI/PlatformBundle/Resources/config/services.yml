@@ -1,0 +1,4 @@
+services:
+#    deusi_platform.example:
+#        class: DEUSI\PlatformBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
