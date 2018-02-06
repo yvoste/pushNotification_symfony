@@ -1,7 +1,37 @@
-{# src/OC/PlatformBundle/Resources/views/Advert/index.html.twig #}
+{# src/DEUSI/PlatformBundle/Resources/views/Advert/index.html.twig #}
 
+{% extends "@DEUSIPlatform/layout.html.twig" %}
+
+{% block title %}
+  Accueil - {{ parent() }}
+{% endblock %}
+
+{% block deusiplatform_body %}
+
+  <h2>Liste des annonces</h2>
+
+  <ul>
+    {% for advert in listAdverts %}
+      <li>
+        <a href="{{ path('deusi_platform_view', {'id': advert.id}) }}">
+          {{ advert.title }}
+        </a>
+        par {{ advert.author }},
+        le {{ advert.date|date('d/m/Y') }}
+      </li>
+    {% else %}
+      <li>Pas (encore !) d'annonces</li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}
+
+
+
+{#
 <!DOCTYPE html>
 <html>
+    
   <head>
     <title>Bienvenue sur ma première page avec OpenClassrooms !</title>
   </head>
@@ -40,4 +70,24 @@
     <br>
  
   </body>
+  
+    <head>
+    <title>Affichage de l'annonce {% if advert_id is defined %}{{ advert_id }}{% endif %}</title>
+  </head>
+  <body>
+    <h1>Affichage de l'annonce n°{% if advert_id is defined %}{{ advert_id }}{% endif %} {{webmaster}}!</h1>
+
+    <div>
+      {# On affiche tous les messages flash dont le nom est « info » #}
+  {#    {% for message in app.session.flashbag.get('info') %}
+        <p>Message flash : {{ message }}</p>
+      {% endfor %}
+    </div>
+
+    <p>
+      Ici nous pourrons lire l'annonce ayant comme id : {% if advert_id is defined %}{{ advert_id }}{% endif %}<br />
+      Mais pour l'instant, nous ne savons pas encore le faire, cela viendra !
+    </p>
+  </body>
 </html
+#}

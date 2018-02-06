@@ -35,6 +35,9 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    globals:
+        webmaster: DeusiDev
+        dir_web: '%dir_web%'
 
 # Doctrine Configuration
 doctrine:

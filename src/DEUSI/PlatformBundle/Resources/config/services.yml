@@ -2,3 +2,9 @@ services:
 #    deusi_platform.example:
 #        class: DEUSI\PlatformBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
+     deusi_platform.antispam:
+         class: DEUSI\PlatformBundle\Antispam\deusiAntispam
+         arguments:
+            - "@mailer"
+            - %locale%
+            - 50
