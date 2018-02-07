@@ -7,4 +7,4 @@ services:
          arguments:
             - "@mailer"
             - %locale%
-            - 50
+            - 5

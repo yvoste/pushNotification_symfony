@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use DEUSI\PlatformBundle\Entity\Advert;
+use DEUSI\PlatformBundle\Entity\Image;
+use DEUSI\PlatformBundle\Entity\Application;
+use DEUSI\PlatformBundle\Entity\Category;
 
 class AdvertController extends Controller
 {
@@ -65,27 +69,94 @@ class AdvertController extends Controller
      
     public function viewAction($id)
     {
-        $advert = array(
-            'title'   => 'Recherche développpeur Symfony2',
-            'id'      => $id,
-            'author'  => 'Alexandre',
-            'content' => 'Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…',
-            'date'    => new \Datetime()
-        );
+        $em = $this->getDoctrine()->getManager();
+        /*
+        // On récupère le repository
+        $repository = $this->getDoctrine()
+            ->getManager()
+             ->getRepository('DEUSIPlatformBundle:Advert')
+            ;
 
+        // On récupère l'entité correspondante à l'id $id
+         $advert = $repository->find($id);
+         */
+        // It's the samee as above but shorter
+        $advert = $em->getRepository('DEUSIPlatformBundle:Advert')->find($id)
+            ;
+        // $advert est donc une instance de OC\PlatformBundle\Entity\Advert
+        // ou null si l'id $id  n'existe pas, d'où ce if :
+        if (null === $advert) {
+            throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+        }
+        
+        // On récupère la liste des candidatures de cette annonce
+        $listApplications = $em->getRepository('DEUSIPlatformBundle:Application')
+           ->findBy(array('advert' => $advert))
+        ;
+        // Le render ne change pas, on passait avant un tableau, maintenant un objet
         return $this->render('@DEUSIPlatform/Advert/view.html.twig', array(
-            'advert' => $advert
+            'advert' => $advert,
+            'listApplications' => $listApplications
          ));
     }
     
     public function addAction(Request $request)
     {
-        // On récupère le service
-        $antispam = $this->container->get('deusi_platform.antispam');
+        // Create entitie
+        $advert = new Advert();
+        $advert->setTitle('Recherche développeur Symfony.');
+        $advert->setAuthor('Alexandre');
+        $advert->setContent("Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…");
+        //$advert->setContent("bla");
+        
+        // On peut ne pas définir ni la date ni la publication,
+        // car ces attributs sont définis automatiquement dans le constructeur
+        
+         // Création de l'entité Image
+        $image = new Image();
+        $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
+        $image->setAlt('Job de rêve');
+        
+        // On lie l'image à l'annonce
+        $advert->setImage($image);
+        
+        // Création d'une première candidature
+        $application1 = new Application();
+        $application1->setAuthor('Marine');
+        $application1->setContent("J'ai toutes les qualités requises.");
 
-        // Je pars du principe que $text contient le texte d'un message quelconque
-        $text = '...';
-        if ($antispam->isSpam($text)) {
+        // Création d'une deuxième candidature par exemple
+        $application2 = new Application();
+        $application2->setAuthor('Pierre');
+        $application2->setContent("Je suis très motivé.");
+
+        // On lie les candidatures à l'annonce
+        $application1->setAdvert($advert);
+        $application2->setAdvert($advert);
+
+        // On récupère l'EntityManager
+        $em = $this->getDoctrine()->getManager();
+
+        // Étape 1 : On « persiste » l'entité
+        $em->persist($advert);
+        
+         // Étape 1 bis : si on n'avait pas défini le cascade={"persist"},
+        // on devrait persister à la main l'entité $image
+        // $em->persist($image);
+        
+        // Étape 1 ter : pour cette relation pas de cascade lorsqu'on persiste Advert, car la relation est
+        // définie dans l'entité Application et non Advert. On doit donc tout persister à la main ici.
+        $em->persist($application1);
+        $em->persist($application2);
+
+        // Étape 2 : On « flush » tout ce qui a été persisté avant
+        $em->flush();
+
+      
+        // On récupère le service pour checked si le contetn n'est pas un spam
+        $antispam = $this->container->get('deusi_platform.antispam');
+        
+        if ($antispam->isSpam($advert->getContent())) {
           throw new \Exception('Votre message a été détecté comme spam !');
         }
     
@@ -99,17 +170,25 @@ class AdvertController extends Controller
             $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
 
             // Puis on redirige vers la page de visualisation de cettte annonce
-            return $this->redirectToRoute('deusi_platform_view', array('advert_id' => 5));
+            return $this->redirectToRoute('deusi_platform_view', array('advert_id' => $advert->getId()));
         }
 
         // Si on n'est pas en POST, alors on affiche le formulaire
-        return $this->render('@DEUSIPlatform/Advert/add.html.twig');
+        return $this->render('@DEUSIPlatform/Advert/add.html.twig', array('advert' => $advert));
         
     }
     
     public function editAction($id, Request $request)
     {
         // Ici, on récupérera l'annonce correspondante à $id
+        $em = $this->getDoctrine()->getManager();
+
+        // On récupère l'annonce $id
+        $advert = $em->getRepository('DEUSIPlatformBundle:Advert')->find($id);
+        
+        if (null === $advert) {
+            throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
+        }
 
         // Même mécanisme que pour l'ajout
         if ($request->isMethod('POST')) {
@@ -118,14 +197,21 @@ class AdvertController extends Controller
             return $this->redirectToRoute('deusi_platform_view', array('id' => 5));
         }
 
-        $advert = array(
-            'title'   => 'Recherche développpeur Symfony2',
-            'id'      => $id,
-            'author'  => 'Alexandre',
-            'content' => 'Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…',
-            'date'    => new \Datetime()
-        );
+        // La méthode findAll retourne toutes les catégories de la base de données
+        $listCategories = $em->getRepository('DEUSIPlatformBundle:Category')->findAll();
+        
+        // On boucle sur les catégories pour les lier à l'annonce
+        /*
+        foreach ($listCategories as $category) {
+          $advert->addCategory($category);
+        }
+        */
+        // Pour persister le changement dans la relation, il faut persister l'entité propriétaire
+        // Ici, Advert est le propriétaire, donc inutile de la persister car on l'a récupérée depuis Doctrine
 
+        // Étape 2 : On déclenche l'enregistrement
+        $em->flush();
+        
         return $this->render('@DEUSIPlatform/Advert/edit.html.twig', array(
             'advert' => $advert
          ));

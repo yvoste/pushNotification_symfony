@@ -1,0 +1,53 @@
+{# src/DEUSI/PlatformBundle/Resources/views/Advert/edit.html.twig #}
+{#
+
+
+
+
+{% block body %}
+
+  <h2>Ajouter une annonce</h2>
+
+  {{ include("@DEUSIPlatform/Advert/form.html.twig") }}
+
+  <p>
+    Attention : Une fois modifier cette annonce sera affichée directement
+    sur la page d'accueil après validation du formulaire.
+  </p>
+
+{% endblock %}
+
+
+#}
+{% extends "@DEUSIPlatform/layout.html.twig" %}
+{% block title %}
+  Modifier une annonce
+{% endblock %}
+
+{% block deusiplatform_body %}
+
+  <h2>Modifier une annonce</h2>
+  {% if not advert.categories.empty %}
+    <p>
+      Cette annonce est parue dans les catégories suivantes :
+      {% for category in advert.categories %}
+        <br>{{ category.name }}{% if not loop.last %}. {% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
+  
+  {{ include("@DEUSIPlatform/Advert/form.html.twig") }}
+  
+  <p>
+    Vous éditez une annonce déjà existante, merci de ne pas changer
+    l'esprit général de l'annonce déjà publiée.
+  </p>
+
+  <p>
+    <a href="{{ path('deusi_platform_view', {'id': advert.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à l'annonce
+    </a>
+  </p>
+
+{% endblock %}
