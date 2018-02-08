@@ -13,6 +13,9 @@ use DEUSI\PlatformBundle\Entity\Advert;
 use DEUSI\PlatformBundle\Entity\Image;
 use DEUSI\PlatformBundle\Entity\Application;
 use DEUSI\PlatformBundle\Entity\Category;
+use DEUSI\PlatformBundle\Entity\AdvertSkill;
+
+
 
 class AdvertController extends Controller
 {
@@ -33,8 +36,10 @@ class AdvertController extends Controller
       ));
     }
     
-    public function indexAction($page, $name)
+    public function indexAction()
     {
+        $page = 1;
+        $name = 'rien';
         // $name it's a relic of tests it's not used
         if($page < 1){
             // if $page is inferior to 1 this trigger an exception
@@ -63,8 +68,23 @@ class AdvertController extends Controller
             'content' => 'Nous proposons un poste pour webdesigner. Blabla…',
             'date'    => new \Datetime())
         );
+        /*
+        $repository = $this
+           ->getDoctrine()
+           ->getManager()
+           ->getRepository(Advert::class)
+         ;
+         */
+        //$advert = $repository->getAdvertWithCategories(['Integration', 'Graphisme']);
+        $repository = $this
+           ->getDoctrine()
+           ->getManager()
+           ->getRepository(Application::class)
+         ;
+        $advert = $repository->getApplicationsWithAdvert(1);
+
         // Mais pour l'instant, on ne fait qu'appeler le template
-        return $this->render('@DEUSIPlatform/Advert/index.html.twig', array('listAdverts' => $listAdverts));        
+        return $this->render('@DEUSIPlatform/Advert/index.html.twig', array('listAdverts' => $listAdverts, 'advert' => $advert));        
     }   
      
     public function viewAction($id)
@@ -83,7 +103,7 @@ class AdvertController extends Controller
         // It's the samee as above but shorter
         $advert = $em->getRepository('DEUSIPlatformBundle:Advert')->find($id)
             ;
-        // $advert est donc une instance de OC\PlatformBundle\Entity\Advert
+        // $advert est donc une instance de DEUSI\PlatformBundle\Entity\Advert
         // ou null si l'id $id  n'existe pas, d'où ce if :
         if (null === $advert) {
             throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
@@ -102,11 +122,15 @@ class AdvertController extends Controller
     
     public function addAction(Request $request)
     {
+        // On récupère l'EntityManager
+        $em = $this->getDoctrine()->getManager();
+        
         // Create entitie
         $advert = new Advert();
-        $advert->setTitle('Recherche développeur Symfony.');
-        $advert->setAuthor('Alexandre');
+        $advert->setTitle('Recherche Joueur Pipot.');
+        $advert->setAuthor('Poo');
         $advert->setContent("Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…");
+        $advert->setEmail('mitaineyves@gmail.com');
         //$advert->setContent("bla");
         
         // On peut ne pas définir ni la date ni la publication,
@@ -133,9 +157,26 @@ class AdvertController extends Controller
         // On lie les candidatures à l'annonce
         $application1->setAdvert($advert);
         $application2->setAdvert($advert);
+        
+        // On récupère toutes les compétences possibles
+        $listSkills = $em->getRepository('DEUSIPlatformBundle:Skill')->findAll();
 
-        // On récupère l'EntityManager
-        $em = $this->getDoctrine()->getManager();
+        // Pour chaque compétence
+        foreach ($listSkills as $skill) {
+            // On crée une nouvelle « relation entre 1 annonce et 1 compétence »
+            $advertSkill = new AdvertSkill();
+
+            // On la lie à l'annonce, qui est ici toujours la même
+            $advertSkill->setAdvert($advert);
+            // On la lie à la compétence, qui change ici dans la boucle foreach
+            $advertSkill->setSkill($skill);
+
+            // Arbitrairement, on dit que chaque compétence est requise au niveau 'Expert'
+            $advertSkill->setLevel('Expert');
+
+            // Et bien sûr, on persiste cette entité de relation, propriétaire des deux autres relations
+            $em->persist($advertSkill);
+        }      
 
         // Étape 1 : On « persiste » l'entité
         $em->persist($advert);
@@ -160,7 +201,7 @@ class AdvertController extends Controller
           throw new \Exception('Votre message a été détecté comme spam !');
         }
     
-    // Ici le message n'est pas un spam
+        // Ici le message n'est pas un spam
         // La gestion d'un formulaire est particulière, mais l'idée est la suivante :
 
         // Si la requête est en POST, c'est que le visiteur a soumis le formulaire
@@ -219,6 +260,7 @@ class AdvertController extends Controller
 
     public function deleteAction($id)
     {
+        /*
         // Ici, on récupérera l'annonce correspondant à $id
 
         // Ici, on gérera la suppression de l'annonce en question
@@ -226,127 +268,23 @@ class AdvertController extends Controller
             'id'      => $id
         );
         return $this->render('@DEUSIPlatform/Advert/delete.html.twig', array('advert' => $advert));
+         * */
+  
+        $advert = new Advert();
+        $advert->setTitle("Recherche développeur !");
+        $advert->setAuthor('Alexandre');
+        $advert->setContent("Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…");
+        $advert->setEmail('mitaineyves@gmail.com');
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($advert);
+        $em->flush(); // C'est à ce moment qu'est généré le slug
+
+        return new Response('Slug généré : '.$advert->getSlug());
+        // Affiche « Slug généré : recherche-developpeur »
+
     }
+    
+    
 }
 
-/* PART ONE
- * class AdvertController extends Controller
-{
-     public function indexAction($page, $name)
-    {
-        return $this->render('@DEUSIPlatform/Advert/index.html.twig', array('nom' => 'Roger', 'name' => $name, 'advert_id' => 5, 'page' => $page));        
-    }
-    
-    /* To watch the URL to the article where id == X
-    * public function indexAction()
-    *{     
-    *   $url = $this->get('router')->generate(
-    *       'deusi_platform_view', // 1er argument : le nom de la route
-    *       array('id' => 5), // 2e argument : les valeurs des paramètres
-    *      UrlGeneratorInterface::ABSOLUTE_URL  // URL absolue
-    *   );
-    * the same but shorter
-    *   $url = $this->generateUrl(
-    *       'deusi_platform_view', // 1er argument : le nom de la route
-    *       array('id' => 5), // 2e argument : les valeurs des paramètres
-    *       UrlGeneratorInterface::ABSOLUTE_URL  // URL absolue
-    *   );
-    *    // $url == « /platform/advert/5 »
-    *    return new Response("The id 5 advertisement URL is : ".$url);
-    }
-    
-     
-    public function viewAction($id, Request $request)
-    {
-        // some methods around Request object
-        $rep = [
-            'nom' => $id,
-            'name' => 'Bilou',
-            'advert_id' => 5,
-            'tag' => $request->query->get('tag'), 
-            'accept' => $request->headers->get('Accept'), 
-            'request' => $request,
-            'encoding' => $request->headers->get('Accept-Encoding'),
-            'lang' => $request->headers->get('Accept-Language'),
-            'con' => $request->headers->get('Connection'),
-            'host' => $request->headers->get('Host'),
-            'upgrade' => $request->headers->get('Upgrade-Insecure-Requests'),
-            'ua' => $request->headers->get('User-Agent'),
-            'ser' => $request->server->get('REQUEST_URI'),
-            'meth' => ($request->isMethod('GET')== true)? 'get':0,
-            'metho' => ($request->isMethod('POST')== true)? 'post':0,
-            'xmlHttp' => ($request->isXmlHttpRequest()== true)? 'xmlHttp':0
-        ];
-        return $this->render('@DEUSIPlatform/Advert/index.html.twig', $rep);
-        //
-        // retreiving session
-        //$session = $request->getSession();
-
-        // Retrieving content of variable user_id
-        //$userId = $session->get('user_id');
-
-        // Define a new value for this variable
-       // $session->set('user_id', 92);
-        
-        // Retrieving content of new variable user_id
-       // $userNId = $session->get('user_id');
-
-        // Don't forget to send the response
-        //return new Response("<body>".$userId."Je suis une page de test, je n'ai rien à dire".$userNId."</body>");
-        
-        
-        /*
-        *    Method to redirect on another url
-        *$url = $this->get('router')->generate('deusi_platform_home');  
-        *    the same but shorter
-        *$url = $this->redirectToRoute('deusi_platform_home');    
-        *return new RedirectResponse($url);
-        *
-        */
-        
-        /* 
-         *   Modify Content_Type in header to return a JSON instead of HTML
-         *$response = new Response(json_encode(array('id' => $id)));
-         *$response->headers->set('Content-Type', 'application/json');
-         *return $reponse
-         *   The same but shorter
-         *return new JsonResponse(array('id' => $id));
-         * 
-         
-    }
-    
-    public function addAction(Request $request)
-    {
-        //$name = 'bolos';
-        //return $this->render('@DEUSIPlatform/Advert/index.html.twig', array('nom' => 'palu', 'name' => $name, 'advert_id' => 5));
-        
-        $session = $request->getSession();    
-        // Method to really add the article
-    
-        // But let's do as if it were
-        $session->getFlashBag()->add('info', 'Annonce bien enregistrée');
-
-         // Le « flashBag » est ce qui contient les messages flash dans la session
-        // Il peut bien sûr contenir plusieurs messages :
-        $session->getFlashBag()->add('info', 'Oui oui, elle est bien enregistrée !');
-
-        // Puis on redirige vers la page de visualisation de cette annonce
-        return $this->redirectToRoute('deusi_platform_view', array('id' => 5));
-        
-    }
-    
-    // On récupère tous les paramètres en arguments de la méthode
-    // l'underscore devant format en fait un paramétre systéme
-    // ce qui implque que symfony va rajouter une entrée Content-Tytpe dans le Header de la réponse
-    public function viewSlugAction($slug, $year, $_format)
-    {
-        return new Response(
-            "On pourrait afficher l'annonce correspondant au
-            slug '".$slug."', créée en ".$year." et au format ".$_format."."
-        );
-    }
-}
- * 
- * 
- 
- */

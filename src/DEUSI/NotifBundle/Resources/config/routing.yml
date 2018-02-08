@@ -1,0 +1,3 @@
+deusi_notif_home:
+    path:    /
+    defaults: { _controller: DEUSINotifBundle:Notification:index }

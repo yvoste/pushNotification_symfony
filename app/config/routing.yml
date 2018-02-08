@@ -1,3 +1,7 @@
+deusi_notif:
+    resource: "@DEUSINotifBundle/Resources/config/routing.yml"
+    prefix:   /notif
+
 deusi_platform:
     resource: "@DEUSIPlatformBundle/Resources/config/routing.yml"
     prefix:   /platform

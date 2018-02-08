@@ -1,10 +1,8 @@
 # src/DEUSI/PlatformBundle/Resources/config/routing.yml
 
 deusi_platform_home:
-    path:    /{page}/{name}
-    defaults: { _controller: DEUSIPlatformBundle:Advert:index, page: 1, name: rien }
-    requirements:
-        page: \d+
+    path:    /
+    defaults: { _controller: DEUSIPlatformBundle:Advert:index}
     
 deusi_platform_view:
     path:    /advert/{id}

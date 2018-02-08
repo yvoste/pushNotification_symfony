@@ -2,9 +2,20 @@ services:
 #    deusi_platform.example:
 #        class: DEUSI\PlatformBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
-     deusi_platform.antispam:
-         class: DEUSI\PlatformBundle\Antispam\deusiAntispam
-         arguments:
+    deusi_platform.antispam:
+        class: DEUSI\PlatformBundle\Antispam\deusiAntispam
+        arguments:
             - "@mailer"
             - %locale%
             - 5
+    deusi_platform.email:
+        class: DEUSI\PlatformBundle\Email\ApplicationMailer
+        arguments:
+            - "@mailer"
+    deusi_platform.doctrine_listener:
+        class: DEUSI\PlatformBundle\DoctrineListener\ApplicationCreationListener
+        arguments:
+            - "@deusi_platform.email"
+        tags:
+            - { name: doctrine.event_listener, event: postPersist}
+            

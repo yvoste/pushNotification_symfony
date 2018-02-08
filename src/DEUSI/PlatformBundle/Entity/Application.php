@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="application")
  * @ORM\Entity(repositoryClass="DEUSI\PlatformBundle\Repository\ApplicationRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Application
 {
@@ -43,7 +44,7 @@ class Application
     private $date;
     
     /**
-     * @ORM\ManyToOne(targetEntity="DEUSI\PlatformBundle\Entity\Advert")
+     * @ORM\ManyToOne(targetEntity="DEUSI\PlatformBundle\Entity\Advert", inversedBy="applications")
      * @ORM\JoinColumn(nullable=false)
     */
     private $advert;
