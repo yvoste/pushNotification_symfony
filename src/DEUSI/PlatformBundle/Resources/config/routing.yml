@@ -1,8 +1,10 @@
 # src/DEUSI/PlatformBundle/Resources/config/routing.yml
 
 deusi_platform_home:
-    path:    /
+    path:    /{page}
     defaults: { _controller: DEUSIPlatformBundle:Advert:index}
+    requirements:
+        page: \d+
     
 deusi_platform_view:
     path:    /advert/{id}
@@ -28,6 +30,11 @@ deusi_platform_delete:
         _controller: DEUSIPlatformBundle:Advert:delete
     requirements:
         id: \d+
+        
+deusi_platform_test:
+    path:      /test
+    defaults:
+        _controller: DEUSIPlatformBundle:Advert:test
         
 deusi_platform_view_slug:
     path:    /{year}/{slug}.{_format}

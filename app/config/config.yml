@@ -38,7 +38,9 @@ twig:
     globals:
         webmaster: DeusiDev
         dir_web: '%dir_web%'
-
+    form_themes:
+       - 'bootstrap_3_layout.html.twig'
+        
 # Doctrine Configuration
 doctrine:
     dbal:

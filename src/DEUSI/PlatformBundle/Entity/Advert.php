@@ -5,7 +5,8 @@ namespace DEUSI\PlatformBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-
+// N'oubliez pas de rajouter ce « use », il définit le namespace pour les annotations de validation
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Advert
  *
@@ -32,6 +33,7 @@ class Advert
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
+     *  @Assert\DateTime()
      */
     private $date;
 
@@ -39,6 +41,7 @@ class Advert
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
+     * @Assert\Length(min=10)
      */
     private $title;
 
@@ -46,6 +49,7 @@ class Advert
      * @var string
      *
      * @ORM\Column(name="author", type="string", length=255)
+     * @Assert\Length(min=2)
      */
     private $author;
     
@@ -53,6 +57,7 @@ class Advert
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255)
+     * @Assert\Email()
      */
     private $email;
 
@@ -60,6 +65,7 @@ class Advert
      * @var string
      *
      * @ORM\Column(name="content", type="text")
+     * @Assert\NotBlank()
      */
     private $content;
     
@@ -72,6 +78,7 @@ class Advert
     
     /**
      * @ORM\OneToOne(targetEntity="DEUSI\PlatformBundle\Entity\Image", cascade={"persist"})
+     * @Assert\Valid()
      * 
     */
     private $image;
@@ -105,6 +112,13 @@ class Advert
         $this->categories = new ArrayCollection();
         //$this->applications = new ArrayCollections();
     }
+     /**
+        * @Assert\IsTrue()
+        */
+       public function isAdvertValid()
+       {
+         return false;
+       }
     /**
      * Get id.
      *
