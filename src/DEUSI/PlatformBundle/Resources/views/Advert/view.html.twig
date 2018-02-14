@@ -9,7 +9,7 @@
 {% block deusiplatform_body %}
     {# On vérifie qu'une image soit bien associée à l'annonce #}
     {% if advert.image is not null %}
-      <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}">
+      <img src="{{dir_web}}/{{ advert.image.url }}" alt="{{ advert.image.alt }}">
     {% endif %}
 
     <h2>{{ advert.title }}</h2>
@@ -40,4 +40,23 @@
       </a>
     </p>
 
+{% endblock %}
+
+{% block js %}
+{% set anew = new %}
+{% set idnew = idnew %}
+<script type="text/javascript">
+    let anew = {{ anew }};
+    let idnew = {{ idnew }};
+    if(typeof(anew) !== 'undefined'){
+        if(anew === 1 ){
+            alert('une nouvelle annonce_'+anew + idnew);
+            askPermission(idnew);
+        } else {
+             alert('PAS de nouvelle annonce_'+anew);
+        }
+    } else {
+        alert('exist pas');
+    }    
+</script>
 {% endblock %}

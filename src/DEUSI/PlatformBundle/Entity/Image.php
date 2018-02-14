@@ -52,7 +52,7 @@ class Image
       $this->file->move($this->getUploadRootDir(), $name);
 
       // On sauvegarde le nom de fichier dans notre attribut $url
-      $this->url = $this->getUploadDir();
+      $this->url = $this->getUploadDir().'/'.$name;
 
       // On crée également le futur attribut alt de notre balise <img>
       $this->alt = $name;

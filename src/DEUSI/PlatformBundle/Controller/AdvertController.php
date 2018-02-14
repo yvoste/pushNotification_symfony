@@ -72,7 +72,7 @@ class AdvertController extends Controller
         ));
     }   
      
-    public function viewAction($id)
+    public function viewAction($id, $new)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -101,6 +101,8 @@ class AdvertController extends Controller
           'advert'           => $advert,
           'listApplications' => $listApplications,
           'listAdvertSkills' => $listAdvertSkills,
+          'idnew' => $id,
+          'new' => $new
         ));
     }
     
@@ -140,7 +142,12 @@ class AdvertController extends Controller
             $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
 
             // On redirige vers la page de visualisation de l'annonce nouvellement créée
-            return $this->redirectToRoute('deusi_platform_view', array('id' => $advert->getId()));
+            return $this->redirectToRoute('deusi_platform_view', 
+                    [
+                        'id' => $advert->getId(),
+                        'new' => 1
+                    ]
+                 );
           
         }
 

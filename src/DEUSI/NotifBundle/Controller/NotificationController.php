@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class NotificationController extends Controller
 {
-    public function indexAction()
+    public function subscriptionAction()
     {
         return $this->render('@DEUSINotif/Notification/index.html.twig');
     }

@@ -7,9 +7,10 @@ deusi_platform_home:
         page: \d+
     
 deusi_platform_view:
-    path:    /advert/{id}
+    path:    /advert/{id}/{new}
     defaults:   
-        _controller:  DEUSIPlatformBundle:Advert:view                 
+        _controller:  DEUSIPlatformBundle:Advert:view
+        new : 0
     requirements:
         id: \d+
     
