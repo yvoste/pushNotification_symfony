@@ -3,7 +3,6 @@
 namespace DEUSI\PlatformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Application
  *

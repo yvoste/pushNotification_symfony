@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new DEUSI\PlatformBundle\DEUSIPlatformBundle(),
             new DEUSI\NotifBundle\DEUSINotifBundle(),
+            new Minishlink\Bundle\WebPushBundle\MinishlinkWebPushBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

@@ -108,7 +108,7 @@ class AdvertController extends Controller
     
     public function addAction(Request $request)
     {
-            // On crée un objet Advert
+        // On crée un objet Advert
         $advert = new Advert();
         
         // Ici, on préremplit avec la date d'aujourd'hui, par exemple
@@ -213,7 +213,7 @@ class AdvertController extends Controller
             return $this->redirectToRoute('deusi_platform_home');
           }
 
-          return $this->render('DEUSIPlatform/Advert/delete.html.twig', array(
+          return $this->render('@DEUSIPlatform/Advert/delete.html.twig', array(
             'advert' => $advert,
             'form'   => $form->createView(),
           ));

@@ -1,3 +1,7 @@
 deusi_notif_home:
-    path:    /
-    defaults: { _controller: DEUSINotifBundle:Notification:index }
+    path:    /subscribe
+    defaults: { _controller: DEUSINotifBundle:Notification:subscription }
+    
+deusi_notif_send:
+    path:    /send
+    defaults: { _controller: DEUSINotifBundle:Notification:sendNotification }

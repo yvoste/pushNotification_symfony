@@ -23,6 +23,8 @@
               Participer au MOOC »
             </a>
           </p>
+          <button onclick="askPermission(1)">ASK_PERMISSION_REGISTER</button>
+          <a href="{{ path('deusi_notif_send') }}">SEND</a>
         </div>
 
         <div class="row">
@@ -48,10 +50,10 @@
           <p>The sky's the limit © {{ 'now'|date('Y') }} and beyond.</p>
         </footer>
     </div>
-    <script src="{{dir_web}}/js/jquery/jQuery3.3.1.js"></script>
-    <script src="{{dir_web}}/bootstrap/js/bootstrap.js"></script>
-    <script src="{{dir_web}}/sw/sw.js"></script>
-    <script src="{{dir_web}}/js/main.js"></script>
+    <script type="text/javascript" src="{{dir_web}}/js/jquery/jQuery3.3.1.js"></script>
+    <script type="text/javascript" src="{{dir_web}}/bootstrap/js/bootstrap.js"></script>
+    <script type="application/javascript" src="{{dir_web}}/sw.js"></script>
+    <script type="application/javascript" src="{{dir_web}}/js/main.js"></script>
     {% block js %} {% endblock %}
   </body>
 </html>
