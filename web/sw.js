@@ -1,10 +1,10 @@
 
 
 /* global self, caches, Promise, fetch, clients */
-var log = console.log.bind(console);//bind our console to a variable
 // Use a cacheName for cache versioning SERVICE WORKER
 var cacheName = 'push_noti_v1';
 var urlsToCache = [
+    '/pushNotification_symfony/web/js/keys.js',
     '/pushNotification_symfony/web/js/main.js',
     '/pushNotification_symfony/web/sw.js',
     '/pushNotification_symfony/web/bootstrap/css/bootstrap.css',
@@ -150,39 +150,59 @@ self.addEventListener('fetch', function(event) {
   );
 });
 */
-var title = "";
-
-
+var data = {};
+self.addEventListener('notificationclick', function(event) {
+    
+    log(data.url);
+    event.notification.close();
+    event.waitUntil(
+        clients.openWindow(data.url)
+    );
+});
 
 self.addEventListener('push', function (event) {
     if (!(self.Notification && self.Notification.permission === 'granted')) {
         return;
     }
     log('NOTIF');
-    var sendNotification = function(message, title, tag) {
+    
+    var sendNotification = function(data) {
+        log(data.title);
+        log(data.image);
+        log(data.url);
         // on actualise la page des notifications ou/et le compteur de notifications
         self.refreshNotifications();
 
-        title = title || "DEUSI",
-        icon = '/pushNotification_symfony/web/icon/icon-48.png';
+        title = data.title || "DEUSI",
+        icon = '/pushNotification_symfony/web/icon/icon-192.png';
 
-        message = message || 'Il y a du neuf !';
-        tag = tag || 'general';
-
-        return self.registration.showNotification(title, {
+        message = data.message || 'Il y a du neuf !';
+        tag = data.tag || 'general';
+        
+        image = data.image || '';
+        if ('actions' in Notification.prototype) {
+          log('Action buttons are supported');
+        } else {
+          log('Action buttons are NOT supported');
+        }
+        
+        const options = {
             body: message,
             icon: icon,
+            image: image,
             tag: tag
-        });
+        }
+
+        return self.registration.showNotification(title, options);
     };
     log(event);
     log( event.data);
     if (event.data) {
-        //var data = event.data.json();
-        var data = event.data.text();
-        event.waitUntil(
-            //sendNotification(data.message, data.tag)
+        data = event.data.json();
+        //var data = event.data.text();
+        event.waitUntil(                
             sendNotification(data)
+            //sendNotification(data)
         );
     } else {
         event.waitUntil(
