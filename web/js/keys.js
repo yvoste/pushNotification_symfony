@@ -8,4 +8,3 @@ const applicationServerPublicKey = 'BBVLiXsgeG4pvKLxAZvGBwfov31kGDD3OJpWt_WIdbdW
 Private Key:
     81gu7NF1WkL28Y1wpVMeSA60qSZE7Mous-gkLAW2I54
 */
-var log = console.log.bind(console);//bind our console to a variable

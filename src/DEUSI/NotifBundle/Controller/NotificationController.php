@@ -57,29 +57,34 @@ class NotificationController extends Controller
     }
     public function sendNotificationAction()
     {
-        $content = ['title'=>'Mon title',
-                    'message'=>'Simple piece of body text.\nSecond line of body text\nThird line of body text', 
-                    'image'=> 'http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg',
-                    'url'=> 'http://artepole.com'
+        $content = [
+                'title'=>'Mon title',
+                'message'=>'Simple piece of body text.\nSecond line of body text\nThird line of body text',
+                'icon'=>'/pushNotification_symfony/web/icon/iconO.png',
+                'image'=> 'http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg', // OPTIONAL displaying only with chrome
+                'url'=> 'http://artepole.com', // OPTIONAL when the user clicks the notification this opens a new window to the URL
+                'tag'=> 'group_1',  // OPTIONAL each message send with this tag replace the previous message sending  with the same tag
+                'options'=>'{"action_0":{"action":"action1","title":"Coffee","icon":"/pushNotification_symfony/web/icon/icon-48.png"}, "action_1":{"action":"action2","title":"PLate","icon":"/pushNotification_symfony/web/icon/icon-48.png"}}'
+                    
             ];
         // array of notifications
         $notifications = [
             [
-                "endpoint" => "https://updates.push.services.mozilla.com/wpush/v2/gAAAAABaixJdV_5GA02oJ6ElL-CiJQH7JVvFSqY2r8EVcO7Yer0LT6cWS9OItUNFyNB-HUbg4CjZ-RqS4hYyDFxkNnhWf8CGX_WJKihARFtkvmYWAOyTYqxd-T_lRuo06UepPX8uk6oIOshw6_MfcblS0m5kIhZBkOzMAu9X2OsPmxY7kDxr8O8", // Firefox 43+
+                "endpoint" => "https://updates.push.services.mozilla.com/wpush/v2/gAAAAABajGIcy48LDL7EgA97MlQa8wxUdlNiakIzMURFGwUJSwbcs-jCziqW5B7khZC8BtQehpkpjja-BTeGlK8R_73zZ8rb1ysjKu6otkNgetk-45gxmDiTZXmxJ2BdZbVkKQ3q1BviIdIMR1_sX2mjPdEp-SlbzTxvSmIEXDcqfSAzGRVTjLQ", // Firefox 43+
                 "payload" => json_encode($content),
-                "userPublicKey" => "BC8UD2l0pBKZzAz-4f8RmtV0uSTaKMEnaZnPFzjNGhyQTQ_mJBB_wjLObNmFr9sBs6nQiTDvj6wI89_uNPe8MiA", // base 64 encoded, should be 88 chars
-                "userAuthToken" => "SqG-iE1va_Pb6qODqP6CiQ", // base 64 encoded, should be 24 chars
+                "userPublicKey" => "BGU9St01TwQYPo1Hv3Xx-5J8Cv4F2ctaXMPLdzabHGIoFoSuTzJD72_KfPIhY7yNE02jMhX3Mdkt7WZGqPT2LqU", // base 64 encoded, should be 88 chars
+                "userAuthToken" => "RqhCqUCVba1s9dKCwjgU-A", // base 64 encoded, should be 24 chars
             ],
         ];
-        /*$notifications = [
+        $notifications1 = [
             [
-                "endpoint" => "https://fcm.googleapis.com/fcm/send/cVzysw4Es0o:APA91bH9NF5qkJFXWLZ0nx5ESY6GbCulSwLfdTfYcsI_6T7fJ2WoLNOSf6kPqqaE6Gb4Vdsp3QzD6rHTupNMNio3ZrTP0bqjqyyfist-i1r9PF1tRErqM0RINd9o0UOVWQtZBb9cOcb8", // Firefox 43+
+                "endpoint" => "https://fcm.googleapis.com/fcm/send/dXLQTN1Cjq0:APA91bEktvZZHiLGfbhuBMZp-5GhQTGEmSbnWVklQSYmfvIlQx1n7YgCEfg_JocUaG4p35zQFmAUySm2-Cnxuc7M440bv2nrQ_ROuBOldJpwy5z9wz3DoPF_cL1ExN6wUEkhILOJ-FVJ", // Firefox 43+
                 "payload" => json_encode($content),
-                "userPublicKey" => "BMS3MunXzuAZAMm8SNzNiQeQ0ptNO105022uiRHyoqaI15Iv1QXzkB5biUalKddyD529aJ2Cenv7L3P6nlzAxZA=", // base 64 encoded, should be 88 chars
-                "userAuthToken" => "9Dp_bRXQv2RcyIOBS1X26Q==", // base 64 encoded, should be 24 chars
+                "userPublicKey" => "BAz3SGr5v-jATK6w52WxaPbIzopdi83ZtK1FkCbHS7ibjGv8fkQxDNiS1cfaO52Lg7YjV2kvvNvQEh4-Ax8Q6zA=", // base 64 encoded, should be 88 chars
+                "userAuthToken" => "x95Qv-6WezZ4zS1AOTJ-qA==", // base 64 encoded, should be 24 chars
             ],
         ];
-        */
+       
             
             
                 

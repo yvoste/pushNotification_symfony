@@ -8,15 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}DEUSI{% endblock %}</title>    
     <link href="{{dir_web}}/bootstrap/css/bootstrap.css" rel="stylesheet">
-    <link rel="manifest" href="{{dir_web}}/manifest.json">
-    <style type='text/css'>
-        .unsub {display:none;}
-    </style>
+    <link rel="manifest" href="{{dir_web}}/manifest.json">    
   </head>
   <body>    
     <div class="container">
         <button disabled class="push-btn" >Enable Push Messaging</button>
         <div id="header" class="jumbotron">
+          <img src="{{dir_web}}/icon/iconO.png" alt="Pas image">
           <h2>{% block ho %}Plateforme d'annonces{% endblock %}</h2>
           <p>
             Ce projet est propulsé par Symfony,

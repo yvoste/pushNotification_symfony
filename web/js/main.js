@@ -33,6 +33,7 @@ function subscribeUser(iduser) {
         log('Failed to subscribe the user: ', err);
     });
 }
+// Call service to get the JSON subscription to the service of web push
 function subscribeUserToPush() {
     log('subscribeUserToPush');
     return navigator.serviceWorker.register(url_FileSW)
@@ -53,6 +54,7 @@ function subscribeUserToPush() {
         log('Subscription failed ' + subscriptionErr);
     });
 }
+// Send the JSON to the backend server to record it
 function sendSubscriptionToBackEnd(subscription, up) {
     if(up === 1){
         fetch(url_Server, {
@@ -127,7 +129,7 @@ function getNotificationPermissionState() {
         resolve(Notification.permission);
     });
 }
-
+// tooggle the button 
 function updateBtn() {
     if (Notification.permission === 'denied') {
       pushButton.textContent = 'Push Messaging Blocked.';
@@ -170,20 +172,20 @@ function initializeUI() {
 }
 log('watch when the script is loading by index');
 if ('serviceWorker' in navigator && 'PushManager' in window) {
-  log('Service Worker and Push is supported');
-  navigator.serviceWorker.register(url_FileSW)
-  .then(function(swReg) {
-    log('Service Worker is registered', swReg);
-    getNotificationPermissionState();
-    registration = swReg;
-    initializeUI();
-  })
-  .catch(function(error) {
-    log('Service Worker Error', error);
-  });
+    log('Service Worker and Push is supported');
+    navigator.serviceWorker.register(url_FileSW)
+    .then(function(swReg) {
+        log('Service Worker is registered', swReg);
+        getNotificationPermissionState();
+        registration = swReg;
+        initializeUI();
+    })
+    .catch(function(error) {
+        log('Service Worker Error', error);
+    });
 } else {
-  warn('Push messaging is not supported');
-  pushButton.textContent = 'Push Not Supported';
+    warn('Push messaging is not supported');
+    pushButton.textContent = 'Push Not Supported';
 }
 
 
