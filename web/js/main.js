@@ -176,6 +176,7 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
     navigator.serviceWorker.register(url_FileSW)
     .then(function(swReg) {
         log('Service Worker is registered', swReg);
+        log('the scope is ', swReg.scope);
         getNotificationPermissionState();
         registration = swReg;
         initializeUI();
@@ -187,6 +188,12 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
     warn('Push messaging is not supported');
     pushButton.textContent = 'Push Not Supported';
 }
+
+
+
+
+
+
 
 
 // Called to convert the public key, which is base 64 URL safe encoded, to a UInt8Array.

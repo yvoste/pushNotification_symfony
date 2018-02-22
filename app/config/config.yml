@@ -84,8 +84,8 @@ minishlink_web_push:
     subject: mitaineyves@gmail.com # can be an URL or a mailto:
     publicKey: BBVLiXsgeG4pvKLxAZvGBwfov31kGDD3OJpWt_WIdbdWdST7VO6T36eywK0TFeBwLqMZrZMRl45aaxFgfV03dzw          # uncompressed public key P-256 encoded in Base64-URL
     privateKey: 81gu7NF1WkL28Y1wpVMeSA60qSZE7Mous-gkLAW2I54       # the secret multiplier of the private key encoded in Base64-URL    
-  ttl: 2419200                    # Time to Live of notifications in seconds
-  urgency: normal                      # can be very-low / low / normal / high
-  topic: tests                        # default identifier for your notifications
+  ttl: 2419200                    # Time To Live (TTL, in seconds) is how long a push message is retained by the push service
+  urgency: normal                 # can be very-low / low / normal / high
+  topic: new_event                # default identifier for your notifications
   timeout: 30                     # Timeout of each request in seconds
   automatic_padding: true         # pad messages automatically for better security (against more bandwith usage)
